@@ -1,0 +1,67 @@
+CREATE DATABASE AcquistiOnline;
+
+USE AcquistiOnline;
+
+CREATE TABLE CLIENTE(
+Id_Cliente INT PRIMARY KEY AUTO_INCREMENT,
+Nome VARCHAR(255)NOT NULL,
+Cognome VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE ORDINE(
+Id_Ordine INT PRIMARY KEY AUTO_INCREMENT,
+Id_Cliente INT,
+Tipo_Pagamento VARCHAR(255)NOT NULL,
+FOREIGN KEY (Id_Cliente) 
+REFERENCES Cliente (Id_Cliente)
+);
+
+CREATE TABLE PRODOTTO(
+Id_Prodotto INT PRIMARY KEY AUTO_INCREMENT,
+Nome VARCHAR(255) NOT NULL,
+Descrizione VARCHAR(255)NOT NULL,
+Prezzo DOUBLE NOT NULL,
+Quantità INT NOT NULL
+);
+
+CREATE TABLE OrderItem(
+Id_OrderItem INT PRIMARY KEY AUTO_INCREMENT,
+Id_Ordine INT NOT NULL,
+Id_Prodotto INT NOT NULL,
+FOREIGN KEY(Id_Ordine) REFERENCES ordine (Id_Ordine),
+FOREIGN KEY(Id_Prodotto)REFERENCES prodotto(Id_Prodotto),
+Quantita_Prodotto INT NOT NULL
+);
+
+INSERT INTO cliente 
+VALUES (1,"Simone","Falcone");
+
+INSERT INTO cliente 
+VALUES (2,"Mattia","Garau");
+
+INSERT INTO cliente 
+VALUES (3,"Tatiana","Bernardi");
+
+INSERT INTO cliente 
+VALUES (4,"Livio","Candela");
+
+INSERT INTO cliente
+VALUES (5,"Dario","Ingletti");
+
+INSERT INTO prodotto 
+VALUES (20,"Smartohone","Telefono all'avanguardia",666,5);
+
+INSERT INTO prodotto 
+VALUES (21,"Laptop","Laptop all'avanguardia",12,7);
+
+INSERT INTO prodotto 
+VALUES (22,"Tablet","Tablet all'avanguardia",369,8);
+
+INSERT INTO prodotto 
+VALUES (23,"Televisore","Televisore all'avanguardia",400,9);
+
+INSERT INTO prodotto 
+VALUES (24,"PlayStation","PlayStation all'avanguardia",500,4);
+
+
+
