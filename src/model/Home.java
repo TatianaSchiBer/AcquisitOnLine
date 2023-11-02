@@ -4,7 +4,6 @@ import java.util.Scanner;
 public class Home {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("Login");
@@ -39,7 +38,6 @@ public class Home {
 	}
 
 	private static void stampMap() {
-		// TODO Auto-generated method stub
 		//Implementa metodo di stampa della mappa
 		
 	}

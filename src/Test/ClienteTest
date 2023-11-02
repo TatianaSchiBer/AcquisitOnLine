@@ -1,0 +1,29 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import org.junit.Test;
+
+public class ClienteTest {
+
+    @Test
+    public void testGetClienteFromDatabase() {
+        // Sostituisci queste informazioni con i dettagli della tua connessione al database
+        String jdbcUrl = "jdbc:mysql://localhost:3306/MYSQL";
+        String username = "root";
+        String password = "";
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+            int idClienteEsistente = 1;
+            Cliente clienteEsistente = Cliente.getClienteFromDatabase(idClienteEsistente, connection);
+            assertNotNull(clienteEsistente);
+            assertEquals(idClienteEsistente, clienteEsistente.getIdCliente());
+
+            int idClienteInesistente = 2000; // Assumendo che questo ID non esista
+            Cliente clienteInesistente = Cliente.getClienteFromDatabase(idClienteInesistente, connection);
+            assertNull(clienteInesistente);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
