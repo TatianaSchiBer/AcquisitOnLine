@@ -1,64 +1,73 @@
 package model;
+
+import DAO.ConnectionFactory;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Home {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+        // Ottieni un'istanza della tua ConnectionFactory
+        ConnectionFactory connectionFactory;
+        try {
+            connectionFactory = ConnectionFactory.getInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
 
-		System.out.println("Login");
-		login();
-		
-		System.out.println("Benvenuti nello store");
+        System.out.print("Inserisci l'ID del cliente: ");
+        int idCliente = scanner.nextInt();
 
-		System.out.println("Ecco la lista");
-		
-		//Stampa lista da DB
-		
-		int prodotto;
-		String ask;
+        Cliente cliente = retrieveCliente(idCliente, connectionFactory);
 
-		boolean condition = true;
-		while (condition) {
-			System.out.println("Digita il numero del prodotto che vuoi selezionare");
-			prodotto = sc.nextInt();
-			System.out.println("Se vuoi scegliere altro inserisci y altrimenti n");  //Inserire richiesta quantità
-			ask = sc.nextLine();
-			if (ask == "n") {
-				System.out.println("Hai scelto "+ prodotto);
-				break;
-			}
+        if (cliente != null) {
+            System.out.println("Cliente con ID " + idCliente + " trovato nel database.");
+            System.out.println("Nome cliente: " + cliente.getNome());
+        } else {
+            System.out.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
+        }
 
-		}
-		
-		System.out.println("Ecco il tuo carrello");
-		stampMap();
-		//Stampa valori mappa tramite metodo
+        // Chiudi la connessione quando hai finito
+        try {
+            connectionFactory.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	}
+        scanner.close();
+    }
 
-	private static void stampMap() {
-		//Implementa metodo di stampa della mappa
-		
-	}
+    public static Cliente retrieveCliente(int idCliente, ConnectionFactory connectionFactory) {
+        Cliente cliente = null;
 
-	private static void login() {
-		boolean condition = false ;
+        try {
+            Connection conn = connectionFactory.getConnection();
 
-																//Implememtare codice database
-		while (!condition) {
-			try {
-				System.out.println("Inserisci codice cliente");
-				Scanner sc = new Scanner(System.in);
-				int codice_cliente = sc.nextInt();
-				condition = true;
-			} catch (Exception e) {
-				System.err.println("Codice cliente invalido");
-			}
-			
-		}
-		
-		
-	}
+            // Crea una query SQL per cercare il cliente per ID e ottenere il nome
+            String sql = "SELECT Nome, Cognome FROM CLIENTE WHERE Id_Cliente = ?";
+            try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+                preparedStatement.setInt(1, idCliente);
 
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String nome = resultSet.getString("Nome");
+                        String cognome = resultSet.getString("Cognome");
+
+                        cliente = new Cliente(idCliente, nome, cognome);
+                    }
+                }
+            }
+
+            connectionFactory.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cliente;
+    }
 }
