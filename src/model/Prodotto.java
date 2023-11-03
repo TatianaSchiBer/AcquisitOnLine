@@ -106,5 +106,39 @@ public class Prodotto {
             e.printStackTrace();
         }
     }
+    public static boolean exists(int idProdotto, Connection connection) throws SQLException {
+        boolean exists = false;
+        String query = "SELECT COUNT(*) FROM prodotto WHERE id_prodotto = ?";
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, idProdotto);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                exists = count > 0;
+            }
+        }
+
+        return exists;
+    }
+
+
+    public static boolean productQuantity(int idProdotto, int quantita, Connection connection) {
+        String query = "SELECT quantità FROM prodotto WHERE id_prodotto = ?";
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, idProdotto);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int quantitaDisponibile = resultSet.getInt("quantità");
+                return quantitaDisponibile >= quantita;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+   
 }
 
