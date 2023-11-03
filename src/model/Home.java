@@ -44,6 +44,11 @@ public class Home {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        System.out.println();
+        System.out.print("Inserisci l'ID del prodotto, finchè non inserirai '0' " +
+                                                            "continuerà a iterare e inserire i prodotti nrl carrello : ");
+        int idProdotto = scanner.nextInt();
      
 
         // Chiudi la connessione quando hai finito
