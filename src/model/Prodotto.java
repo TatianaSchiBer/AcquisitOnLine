@@ -64,7 +64,7 @@ public class Prodotto {
                 String nome = resultSet.getString("Nome");
                 String descrizione = resultSet.getString("Descrizione");
                 double prezzo = resultSet.getDouble("Prezzo");
-                int quantita = resultSet.getInt("Quantita");
+                int quantita = resultSet.getInt("Quantità");
                 Prodotto prodotto = new Prodotto(quantita, descrizione, descrizione, prezzo, quantita);
                 prodotto.setIdProdotto(idProdotto);
                 prodotto.setNome(nome);
@@ -80,6 +80,31 @@ public class Prodotto {
         }
         return null; // Ritorna null se non viene trovato il prodotto
 
+    }
+
+    // Metodo per stampare tutti i prodotti dalla tabella PRODOTTO
+    public static void stampaTuttiIProdotti(Connection connection) {
+        String query = "SELECT Id_Prodotto, Nome, Descrizione, Prezzo, Quantità FROM PRODOTTO";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int idProdotto = resultSet.getInt("Id_Prodotto");
+                String nome = resultSet.getString("Nome");
+                String descrizione = resultSet.getString("Descrizione");
+                double prezzo = resultSet.getDouble("Prezzo");
+                int quantita = resultSet.getInt("Quantità");
+
+                System.out.println("ID Prodotto: " + idProdotto);
+                System.out.println("Nome: " + nome);
+                System.out.println("Descrizione: " + descrizione);
+                System.out.println("Prezzo: " + prezzo);
+                System.out.println("Quantità: " + quantita);
+                System.out.println();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

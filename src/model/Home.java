@@ -1,9 +1,6 @@
 package model;
 
 import DAO.ConnectionFactory;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -17,20 +14,37 @@ public class Home {
             connectionFactory = ConnectionFactory.getInstance();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            scanner.close();
             return;
         }
 
-        System.out.print("Inserisci l'ID del cliente: ");
-        int idCliente = scanner.nextInt();
+        int idCliente = 0;
+        boolean condition = false;
+        while (!condition) {
+            try {
+                System.out.print("Inserisci l'ID del cliente: ");
+                idCliente = scanner.nextInt();
 
-        Cliente cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
+                Cliente cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
 
-        if (cliente != null) {
-            System.out.println("Cliente con ID " + idCliente + " trovato nel database.");
-            System.out.println("Nome cliente: " + cliente.getNome());
-        } else {
-            System.out.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
+                System.out.println("Cliente con ID " + idCliente + " trovato nel database.");
+                System.out.println("Nome cliente: " + cliente.getNome());
+
+                break;
+            } catch (Exception e) {
+                System.err.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
+            }
         }
+
+
+        System.out.println("Questi sono i prodotti nel database : ");
+        try {
+            Prodotto.stampaTuttiIProdotti(connectionFactory.getConnection());
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+     
 
         // Chiudi la connessione quando hai finito
         try {
