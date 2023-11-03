@@ -1,0 +1,6 @@
+DAO\ConnectionFactory.class
+model\Prodotto.class
+DAO\TestConnessioneMySql.class
+DAO\CheckDatabaseTables.class
+model\Home.class
+model\Cliente.class
