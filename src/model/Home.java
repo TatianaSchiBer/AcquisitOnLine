@@ -23,7 +23,7 @@ public class Home {
         System.out.print("Inserisci l'ID del cliente: ");
         int idCliente = scanner.nextInt();
 
-        Cliente cliente = retrieveCliente(idCliente, connectionFactory);
+        Cliente cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
 
         if (cliente != null) {
             System.out.println("Cliente con ID " + idCliente + " trovato nel database.");
@@ -40,34 +40,5 @@ public class Home {
         }
 
         scanner.close();
-    }
-
-    public static Cliente retrieveCliente(int idCliente, ConnectionFactory connectionFactory) {
-        Cliente cliente = null;
-
-        try {
-            Connection conn = connectionFactory.getConnection();
-
-            // Crea una query SQL per cercare il cliente per ID e ottenere il nome
-            String sql = "SELECT Nome, Cognome FROM CLIENTE WHERE Id_Cliente = ?";
-            try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-                preparedStatement.setInt(1, idCliente);
-
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        String nome = resultSet.getString("Nome");
-                        String cognome = resultSet.getString("Cognome");
-
-                        cliente = new Cliente(idCliente, nome, cognome);
-                    }
-                }
-            }
-
-            connectionFactory.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return cliente;
     }
 }

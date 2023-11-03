@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import DAO.ConnectionFactory;
+
 public class Cliente {
     private int idCliente;
     private String nome;
@@ -43,28 +45,33 @@ public class Cliente {
     }
 
     // Metodo per recuperare un cliente dal database tramite l'ID
-    public static Cliente getClienteFromDatabase(int idCliente, Connection connection) {
-        String query = "SELECT Nome, Cognome FROM CLIENTE WHERE Id_Cliente = 2";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, idCliente);
-            ResultSet resultSet = statement.executeQuery();
+    public static Cliente retrieveCliente(int idCliente, ConnectionFactory connectionFactory) {
+        Cliente cliente = null;
 
-            if (resultSet.next()) {
-                String nome = resultSet.getString("Nome");
-                String cognome = resultSet.getString("Cognome");
+        try {
+            Connection conn = connectionFactory.getConnection();
 
-                Cliente cliente = new Cliente(idCliente, cognome, cognome);
-                cliente.setIdCliente(idCliente);
-                cliente.setNome(nome);
-                cliente.setCognome(cognome);
+            // Crea una query SQL per cercare il cliente per ID e ottenere il nome
+            String sql = "SELECT Nome, Cognome FROM CLIENTE WHERE Id_Cliente = ?";
+            try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+                preparedStatement.setInt(1, idCliente);
 
-                return cliente;
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String nome = resultSet.getString("Nome");
+                        String cognome = resultSet.getString("Cognome");
+
+                        cliente = new Cliente(idCliente, nome, cognome);
+                    }
+                }
             }
+
+            connectionFactory.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null; // Ritorna null se non viene trovato il cliente
+        return cliente;
     }
 }
 
