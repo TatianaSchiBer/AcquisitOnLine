@@ -1,3 +1,10 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Cliente {
     private int idCliente;
     private String nome;
@@ -46,7 +53,7 @@ public class Cliente {
                 String nome = resultSet.getString("Nome");
                 String cognome = resultSet.getString("Cognome");
 
-                Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente(idCliente, cognome, cognome);
                 cliente.setIdCliente(idCliente);
                 cliente.setNome(nome);
                 cliente.setCognome(cognome);
