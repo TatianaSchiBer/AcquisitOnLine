@@ -33,7 +33,8 @@ public class Home {
 		while (!condition) {
 			try {
 				System.out.print("Inserisci l'ID del cliente: ");
-				idCliente = scanner.nextInt();
+				idCliente = InputHandler.leggiInteroValido();
+        		System.out.println("Hai inserito un intero valido: " + idCliente);
 		
 				cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
 		
@@ -69,7 +70,7 @@ public class Home {
 		Carrello carrello = new Carrello(mappaProdotti); // Crea un carrello con la mappa dei prodotti
 		
 		while (true) {
-			idProdotto = scanner.nextInt();
+			idProdotto = InputHandler.leggiInteroValido();
 			int quantita = 0;
 			if (idProdotto == 0) {
 				break;
@@ -81,7 +82,7 @@ public class Home {
 				while (!condition1) {
 					try {
 						System.out.print("Inserisci la quantità del prodotto: ");
-						quantita = scanner.nextInt();
+						quantita = InputHandler.leggiInteroValido();
 
 						if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
 							System.out.println("Quantità valida.");
@@ -127,5 +128,27 @@ public class Home {
 		scanner.close();
 		
 	}
+
+	public class InputHandler {
+		private static Scanner scanner = new Scanner(System.in);
+	
+		public static int leggiInteroValido() {
+			while (true) {
+				try {
+					String input = scanner.next();
+					int valore = Integer.parseInt(input);
+					return valore;
+				} catch (NumberFormatException e) {
+					System.err.println("Input non valido. Inserisci un valore intero.");
+				}
+			}
+		}
+	
+		public static void chiudiScanner() {
+			scanner.close();
+		}
+	}
+	
 	
 }
+
