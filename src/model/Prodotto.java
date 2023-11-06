@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Prodotto {
     private int idProdotto;
@@ -138,6 +140,30 @@ public class Prodotto {
         }
 
         return false;
+    }
+
+    // Metodo per caricare tutti i prodotti in una mappa
+    public static Map<Integer, Prodotto> caricaMappaProdotti(Connection connection) {
+        String query = "SELECT Id_Prodotto, Nome, Descrizione, Prezzo, Quantità FROM PRODOTTO";
+        Map<Integer, Prodotto> mappaProdotti = new HashMap<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int idProdotto = resultSet.getInt("Id_Prodotto");
+                String nome = resultSet.getString("Nome");
+                String descrizione = resultSet.getString("Descrizione");
+                double prezzo = resultSet.getDouble("Prezzo");
+                int quantita = resultSet.getInt("Quantità");
+
+                Prodotto prodotto = new Prodotto(idProdotto, nome, descrizione, prezzo, quantita);
+                mappaProdotti.put(idProdotto, prodotto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return mappaProdotti;
     }
    
 }
