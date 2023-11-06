@@ -34,15 +34,20 @@ public class Home {
 			try {
 				System.out.print("Inserisci l'ID del cliente: ");
 				idCliente = scanner.nextInt();
-				
+		
 				cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
+		
+				if (cliente != null) {
+					System.out.println("Cliente con ID " + idCliente + " trovato nel database.");
+					System.out.println("Nome cliente: " + cliente.getNome());
+					break;
+				} else {
+					System.err.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
+					condition = false;
+				}		
 				
-				System.out.println("Cliente con ID " + idCliente + " trovato nel database.");
-				System.out.println("Nome cliente: " + cliente.getNome());
-				
-				break;
 			} catch (Exception e) {
-				System.err.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
+				System.err.println("Errore durante il recupero del cliente.");
 			}
 		}
 		
