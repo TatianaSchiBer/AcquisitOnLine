@@ -65,37 +65,38 @@ public class Home {
 		
 		while (true) {
 			idProdotto = scanner.nextInt();
-			
+			int quantita = 0;
 			if (idProdotto == 0) {
 				break;
 			}
 			
 			if (mappaProdotti.containsKey(idProdotto)) {
-				int quantita = 0;
+				
 				boolean condition1 = false;
 				while (!condition1) {
 					try {
 						System.out.print("Inserisci la quantità del prodotto: ");
 						quantita = scanner.nextInt();
+
 						if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
 							System.out.println("Quantità valida.");
 							break;
 						} else {
 							System.out.println("Quantità non valida.");
+							condition1 = false;
 							throw new Exception();
 						}
 					} catch (Exception e) {
 						System.out.println("Reinserisci la quantità del prodotto: ");
-						condition1 = false;
 					}
 				}
 				
 				
-				carrello.aggiungiAlCarrello(idProdotto, quantita);
-				System.out.println("Prodotto aggiunto al carrello.");
 			} else {
 				System.out.println("Prodotto non trovato.");
 			}
+			carrello.aggiungiAlCarrello(idProdotto, quantita);
+			System.out.println("Prodotto aggiunto al carrello.");
 		}
 		
 		System.out.println("Inserisci metodo di pagamento: ");

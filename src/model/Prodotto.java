@@ -133,7 +133,8 @@ public class Prodotto {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int quantitaDisponibile = resultSet.getInt("quantità");
-                return quantitaDisponibile >= quantita;
+                
+                return quantitaDisponibile >= quantita && quantita > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ public class Carrello {
 
     // Aggiungi un prodotto al carrello con una determinata quantità
     public void aggiungiAlCarrello(int idProdotto, int quantita) {
-        if (quantita <= 0) {
+        if (quantita <= 1) {
             System.out.println("La quantità deve essere maggiore di zero.");
             return;
         }
