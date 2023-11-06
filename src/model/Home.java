@@ -34,7 +34,6 @@ public class Home {
 			try {
 				System.out.print("Inserisci l'ID del cliente: ");
 				idCliente = InputHandler.leggiInteroValido();
-        		System.out.println("Hai inserito un intero valido: " + idCliente);
 		
 				cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
 		
@@ -86,6 +85,8 @@ public class Home {
 
 						if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
 							System.out.println("Quantità valida.");
+							carrello.aggiungiAlCarrello(idProdotto, quantita);
+							System.out.println("Prodotto aggiunto al carrello.");
 							break;
 						} else {
 							System.out.println("Quantità non valida.");
@@ -95,14 +96,14 @@ public class Home {
 					} catch (Exception e) {
 						System.out.println("Reinserisci la quantità del prodotto: ");
 					}
+					
 				}
 				
 				
 			} else {
 				System.out.println("Prodotto non trovato.");
 			}
-			carrello.aggiungiAlCarrello(idProdotto, quantita);
-			System.out.println("Prodotto aggiunto al carrello.");
+			
 		}
 		
 		System.out.println("Inserisci metodo di pagamento: ");
