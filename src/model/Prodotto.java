@@ -16,7 +16,7 @@ public class Prodotto {
     private String descrizione;
     private double prezzo;
     private int quantita;
-
+    
     public Prodotto(int idProdotto, String nome, String descrizione, double prezzo, int quantita) {
         this.idProdotto = idProdotto;
         this.nome = nome;
@@ -24,8 +24,8 @@ public class Prodotto {
         this.prezzo = prezzo;
         this.quantita = quantita;
     }
-
-
+    
+    
     // Metodi getter e setter per idProdotto, nome, descrizione, prezzo e quantita
     public int getIdProdotto() {
         return idProdotto;
@@ -42,7 +42,7 @@ public class Prodotto {
     public String getDescrizione() {
         return descrizione;
     }
-
+    
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
@@ -65,7 +65,7 @@ public class Prodotto {
             statement.setInt(1, idProdotto);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-
+                
                 String nome = resultSet.getString("Nome");
                 String descrizione = resultSet.getString("Descrizione");
                 double prezzo = resultSet.getDouble("Prezzo");
@@ -77,29 +77,29 @@ public class Prodotto {
                 prodotto.setPrezzo(prezzo);
                 prodotto.setQuantita(quantita);
                 return prodotto;
-
-
-                }
+                
+                
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null; // Ritorna null se non viene trovato il prodotto
-
+        
     }
-
+    
     // Metodo per stampare tutti i prodotti dalla tabella PRODOTTO
     public static void stampaTuttiIProdotti(Connection connection) {
         String query = "SELECT Id_Prodotto, Nome, Descrizione, Prezzo, Quantità FROM PRODOTTO";
-
+        
         try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+        ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 int idProdotto = resultSet.getInt("Id_Prodotto");
                 String nome = resultSet.getString("Nome");
                 String descrizione = resultSet.getString("Descrizione");
                 double prezzo = resultSet.getDouble("Prezzo");
                 int quantita = resultSet.getInt("Quantità");
-
+                
                 System.out.println("ID Prodotto: " + idProdotto);
                 System.out.println("Nome: " + nome);
                 System.out.println("Descrizione: " + descrizione);
@@ -123,11 +123,11 @@ public class Prodotto {
                 exists = count > 0;
             }
         }
-
+        
         return exists;
     }
-
-
+    
+    
     public static boolean productQuantity(int idProdotto, int quantita, Connection connection) {
         String query = "SELECT quantità FROM prodotto WHERE id_prodotto = ?";
         
@@ -142,34 +142,34 @@ public class Prodotto {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        
         return false;
     }
-
+    
     // Metodo per caricare tutti i prodotti in una mappa
     public static Map<Integer, Prodotto> caricaMappaProdotti(Connection connection) {
         String query = "SELECT Id_Prodotto, Nome, Descrizione, Prezzo, Quantità FROM PRODOTTO";
         Map<Integer, Prodotto> mappaProdotti = new HashMap<>();
-
+        
         try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+        ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 int idProdotto = resultSet.getInt("Id_Prodotto");
                 String nome = resultSet.getString("Nome");
                 String descrizione = resultSet.getString("Descrizione");
                 double prezzo = resultSet.getDouble("Prezzo");
                 int quantita = resultSet.getInt("Quantità");
-
+                
                 Prodotto prodotto = new Prodotto(idProdotto, nome, descrizione, prezzo, quantita);
                 mappaProdotti.put(idProdotto, prodotto);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        
         return mappaProdotti;
     }
-
+    
     public static void selezionaProdotti(Connection connection,ConnectionFactory connectionFactory, Map<Integer, 
     Prodotto> mappaProdotti, Carrello carrello, int idCliente) throws SQLException {
         System.out.print("Inserisci l'ID del prodotto, finché non inserirai '0', " +
@@ -191,9 +191,7 @@ public class Prodotto {
                         quantita = InputHandler.leggiInteroValido();
                         
                         if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
-                            System.out.println("Quantità valida.");
                             carrello.aggiungiAlCarrello(idProdotto, quantita);
-                            System.out.println("Prodotto aggiunto al carrello.");
                             break;
                         } else {
                             System.out.println("Quantità non valida.");
@@ -209,6 +207,6 @@ public class Prodotto {
             }
         }
     }
-   
+    
 }
 
