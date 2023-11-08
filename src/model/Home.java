@@ -2,6 +2,7 @@ package model;
 
 import DAO.ConnectionFactory;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -30,14 +31,8 @@ public class Home {
         Cliente cliente = new Cliente(0, null, null);
         
         // Effettua il login
+        clrscr();
         cliente = eseguiLogin(connectionFactory);
-        
-        if (cliente == null) {
-            System.err.println("Nessun cliente trovato nel database. Chiusura del programma.");
-            connectionFactory.close();
-            scanner.close();
-            return;
-        }
         
         System.out.println("Cliente con ID " + cliente.getIdCliente() + " trovato nel database.");
         System.out.println("Nome cliente: " + cliente.getNome());
@@ -81,10 +76,12 @@ public class Home {
                 if (cliente != null) {
                     condition = true;
                 } else {
+                    clrscr();
                     System.err.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
                 }
                 
             } catch (Exception e) {
+                clrscr();
                 System.err.println("Errore durante il recupero del cliente.");
             }
         }
@@ -102,23 +99,51 @@ public class Home {
     private static void gestisciScelta(int scelta, Connection connection, ConnectionFactory connectionFactory, Map<Integer, Prodotto> mappaProdotti, Carrello carrello, int idCliente, Cliente cliente) throws SQLException {
         switch (scelta) {
             case 1:
+            clrscr();
             Prodotto.stampaTuttiIProdotti(connection);
             break;
             case 2:
+            clrscr();
             selezionaProdotti(connection, connectionFactory, mappaProdotti, carrello, idCliente);
             break;
             case 3:
-            System.out.println("Questi sono i prodotti nel carrello : ");
-            System.out.println("Cliente : " + idCliente + " " + cliente.getNome() + " " + cliente.getCognome());
+            clrscr();
+            visualizzaCarrello(idCliente, cliente);
             carrello.stampaCarrello();
             break;
             case 4:
+            clrscr();
             System.out.println("Chiusura del programma.");
             break;
             default:
+            clrscr();
             System.out.println("Scelta non valida. Riprova.");
             break;
         }
+    }
+    
+    private static void visualizzaCarrello(int idCliente, Cliente cliente) throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        String metodoPagamento = "";
+        boolean condition = false;
+        while (!condition) {
+            System.out.println("Inserisci il metodo di pagamento  ");
+            System.out.println("scegli tra carta o contanti : ");
+            
+            metodoPagamento = scanner.next().toLowerCase();
+            
+            if (metodoPagamento.equals("carta") || metodoPagamento.equals("contanti")) {
+                clrscr();
+                break;
+            }else{
+                System.out.println("Inserisci il metodo di pagamento valido ");
+            }
+            
+        }
+        
+        System.out.println("Questi sono i prodotti nel carrello : ");
+        System.out.println("Cliente : " + idCliente + " " + cliente.getNome() + " " + cliente.getCognome() 
+        + " Metodo di pagamento : " + metodoPagamento);
     }
     
     private static void selezionaProdotti(Connection connection,ConnectionFactory connectionFactory, Map<Integer, Prodotto> mappaProdotti, Carrello carrello, int idCliente) throws SQLException {
@@ -130,10 +155,6 @@ public class Home {
             idProdotto = InputHandler.leggiInteroValido();
             int quantita = 0;
             if (idProdotto == 0) {
-                Scanner scanner = new Scanner(System.in);
-                System.out.println("Inserisci il metodo di pagamento : ");
-                String metodoPagamento = scanner.next();
-                Ordine.insertOrdine(idCliente, metodoPagamento, connectionFactory);
                 break;
             }
             
@@ -182,6 +203,24 @@ public class Home {
         public static void chiudiScanner() {
             scanner.close();
         }
+    }
+    
+    public static void clrscr(){
+        
+        //Clears Screen in java
+        
+        try {
+            
+            if (System.getProperty("os.name").contains("Windows"))
+            
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            
+            else
+            
+            Runtime.getRuntime().exec("clear");
+            
+        } catch (IOException | InterruptedException ex) {}
+        
     }
 }
 
