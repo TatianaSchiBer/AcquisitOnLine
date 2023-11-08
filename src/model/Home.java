@@ -72,42 +72,8 @@ public class Home {
                     Prodotto.stampaTuttiIProdotti(connection);
                     break;
                 case 2:
-                    System.out.print("Inserisci l'ID del prodotto, finché non inserirai '0', " +
-                            "continuerai a iterare e inserire i prodotti nel carrello: ");
-                    int idProdotto = 0;
+                    selezionaProdotti(connection, mappaProdotti, carrello);
 
-                    while (true) {
-                        idProdotto = InputHandler.leggiInteroValido();
-                        int quantita = 0;
-                        if (idProdotto == 0) {
-                            break;
-                        }
-
-                        if (mappaProdotti.containsKey(idProdotto)) {
-                            boolean condition1 = false;
-                            while (!condition1) {
-                                try {
-                                    System.out.print("Inserisci la quantità del prodotto: ");
-                                    quantita = InputHandler.leggiInteroValido();
-
-                                    if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
-                                        System.out.println("Quantità valida.");
-                                        carrello.aggiungiAlCarrello(idProdotto, quantita);
-                                        System.out.println("Prodotto aggiunto al carrello.");
-                                        break;
-                                    } else {
-                                        System.out.println("Quantità non valida.");
-                                        condition1 = false;
-                                        throw new Exception();
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println("Reinserisci la quantità del prodotto: ");
-                                }
-                            }
-                        } else {
-                            System.out.println("Prodotto non trovato.");
-                        }
-                    }
                     break;
                 case 3:
                     System.out.println("Questi sono i prodotti nel carrello : ");
@@ -131,6 +97,45 @@ public class Home {
         }
 
         scanner.close();
+    }
+
+    private static void selezionaProdotti(Connection connection, Map<Integer, Prodotto> mappaProdotti, Carrello carrello) {
+        System.out.print("Inserisci l'ID del prodotto, finché non inserirai '0', " +
+                "continuerai a iterare e inserire i prodotti nel carrello: ");
+        int idProdotto = 0;
+
+        while (true) {
+            idProdotto = InputHandler.leggiInteroValido();
+            int quantita = 0;
+            if (idProdotto == 0) {
+                break;
+            }
+
+            if (mappaProdotti.containsKey(idProdotto)) {
+                boolean condition1 = false;
+                while (!condition1) {
+                    try {
+                        System.out.print("Inserisci la quantità del prodotto: ");
+                        quantita = InputHandler.leggiInteroValido();
+
+                        if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
+                            System.out.println("Quantità valida.");
+                            carrello.aggiungiAlCarrello(idProdotto, quantita);
+                            System.out.println("Prodotto aggiunto al carrello.");
+                            break;
+                        } else {
+                            System.out.println("Quantità non valida.");
+                            condition1 = false;
+                            throw new Exception();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Reinserisci la quantità del prodotto: ");
+                    }
+                }
+            } else {
+                System.out.println("Prodotto non trovato.");
+            }
+        }
     }
 
 	public class InputHandler {
