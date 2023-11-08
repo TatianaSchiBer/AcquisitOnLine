@@ -38,6 +38,7 @@ public class Carrello {
             }
             System.out.println("Quantità valida.");
             System.out.println("Prodotto aggiunto al carrello.");
+            System.out.println("Inserisci altri prodotti o digita 0 per terminare l'ordine");
             prodottiCarrello.put(idProdotto, sommaQuantità);
         } else {
             // Se il prodotto non è nel carrello, aggiungi il prodotto con la quantità specificata
