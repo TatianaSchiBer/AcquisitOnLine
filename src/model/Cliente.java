@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import DAO.ConnectionFactory;
+import model.Home.InputHandler;
 
 public class Cliente {
     private int idCliente;
@@ -71,6 +71,33 @@ public class Cliente {
             e.printStackTrace();
         }
 
+        return cliente;
+    }
+
+    public static Cliente  eseguiLogin(ConnectionFactory connectionFactory) {
+        Cliente cliente = new Cliente(0, null, null);
+        boolean condition = false;
+        
+        while (!condition) {
+            try {
+                System.out.print("Inserisci l'ID del cliente: ");
+                int idCliente = InputHandler.leggiInteroValido();
+                
+                cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
+                
+                if (cliente != null) {
+                    condition = true;
+                } else {
+                    Home.clrscr();
+                    System.err.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
+                }
+                
+            } catch (Exception e) {
+                Home.clrscr();
+                System.err.println("Errore durante il recupero del cliente.");
+            }
+        }
+        
         return cliente;
     }
 }

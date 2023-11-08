@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import DAO.ConnectionFactory;
+import model.Home.InputHandler;
+
 public class Prodotto {
     private int idProdotto;
     private String nome;
@@ -165,6 +168,46 @@ public class Prodotto {
         }
 
         return mappaProdotti;
+    }
+
+    public static void selezionaProdotti(Connection connection,ConnectionFactory connectionFactory, Map<Integer, 
+    Prodotto> mappaProdotti, Carrello carrello, int idCliente) throws SQLException {
+        System.out.print("Inserisci l'ID del prodotto, finché non inserirai '0', " +
+        "continuerai a iterare e inserire i prodotti nel carrello: ");
+        int idProdotto = 0;
+        
+        while (true) {
+            idProdotto = InputHandler.leggiInteroValido();
+            int quantita = 0;
+            if (idProdotto == 0) {
+                break;
+            }
+            
+            if (mappaProdotti.containsKey(idProdotto)) {
+                boolean condition1 = false;
+                while (!condition1) {
+                    try {
+                        System.out.print("Inserisci la quantità del prodotto: ");
+                        quantita = InputHandler.leggiInteroValido();
+                        
+                        if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
+                            System.out.println("Quantità valida.");
+                            carrello.aggiungiAlCarrello(idProdotto, quantita);
+                            System.out.println("Prodotto aggiunto al carrello.");
+                            break;
+                        } else {
+                            System.out.println("Quantità non valida.");
+                            condition1 = false;
+                            throw new Exception();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Reinserisci la quantità del prodotto: ");
+                    }
+                }
+            } else {
+                System.out.println("Prodotto non trovato.");
+            }
+        }
     }
    
 }

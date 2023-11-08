@@ -1,7 +1,9 @@
 package model;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Carrello {
     private Map<Integer, Integer> prodottiCarrello; // La chiave è l'ID del prodotto, il valore è la quantità
@@ -27,6 +29,30 @@ public class Carrello {
             // Se il prodotto non è nel carrello, aggiungi il prodotto con la quantità specificata
             prodottiCarrello.put(idProdotto, quantita);
         }
+    }
+
+    public static void visualizzaCarrello(int idCliente, Cliente cliente) throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        String metodoPagamento = "";
+        boolean condition = false;
+        while (!condition) {
+            System.out.println("Inserisci il metodo di pagamento  ");
+            System.out.println("scegli tra carta o contanti : ");
+            
+            metodoPagamento = scanner.next().toLowerCase();
+            
+            if (metodoPagamento.equals("carta") || metodoPagamento.equals("contanti")) {
+                Home.clrscr();
+                break;
+            }else{
+                System.out.println("Inserisci il metodo di pagamento valido ");
+            }
+            
+        }
+        
+        System.out.println("Questi sono i prodotti nel carrello : ");
+        System.out.println("Cliente : " + idCliente + " " + cliente.getNome() + " " + cliente.getCognome() 
+        + " Metodo di pagamento : " + metodoPagamento);
     }
 
     // Metodo per stampare il carrello con nome e prezzo dei prodotti
