@@ -192,6 +192,7 @@ public class Prodotto {
                         
                         if (Prodotto.productQuantity(idProdotto, quantita, connection)) {
                             carrello.aggiungiAlCarrello(idProdotto, quantita);
+                            System.out.println(" ");
                             break;
                         } else {
                             System.out.println("Quantità non valida.");
@@ -205,6 +206,8 @@ public class Prodotto {
             } else {
                 System.out.println("Prodotto non trovato.");
             }
+            System.out.println("Inserisci l'ID del prodotto");
+
         }
     }
     

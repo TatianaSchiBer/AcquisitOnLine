@@ -69,12 +69,12 @@ public class Carrello {
         
         System.out.println("Questi sono i prodotti nel carrello : ");
         System.out.println("Cliente : " + idCliente + " " + cliente.getNome() + " " + cliente.getCognome() 
-        + " Metodo di pagamento : " + metodoPagamento);
+        + "\nMetodo di pagamento : " + metodoPagamento);
     }
     
     // Metodo per stampare il carrello con nome e prezzo dei prodotti
     public void stampaCarrello() {
-        System.out.println("Prodotti nel carrello:");
+        System.out.println("Prodotti nel carrello:\n\n");
         double prezzoTotale = 0.0;
         
         for (Map.Entry<Integer, Integer> entry : prodottiCarrello.entrySet()) {
@@ -95,7 +95,7 @@ public class Carrello {
             prezzoTotale += prezzoTotaleProdotto;
         }
         
-        System.out.println("Prezzo totale del carrello: " + prezzoTotale);
+        System.out.println("\n\nPrezzo totale del carrello: " + prezzoTotale + "\n\n");
     }
 }
 
