@@ -8,15 +8,15 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Home {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Scanner scanner = new Scanner(System.in);
 
         // Dichiarazione della mappaProdotti
         Map<Integer, Prodotto> mappaProdotti = null;
 
         // Ottieni un'istanza della tua ConnectionFactory
-        ConnectionFactory connectionFactory;
-        Connection connection = null;
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
         try {
             connectionFactory = ConnectionFactory.getInstance();
             // Carica i prodotti in mappaProdotti
@@ -50,15 +50,6 @@ public class Home {
             } catch (Exception e) {
                 System.err.println("Errore durante il recupero del cliente.");
             }
-        }
-
-        System.out.println("Questi sono i prodotti nel database : ");
-        try {
-            connection = connectionFactory.getConnection();
-            mappaProdotti = Prodotto.caricaMappaProdotti(connection);
-            Prodotto.stampaTuttiIProdotti(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         System.out.println();
