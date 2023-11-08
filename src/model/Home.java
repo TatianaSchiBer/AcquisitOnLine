@@ -28,29 +28,19 @@ public class Home {
         }
 
         Cliente cliente = new Cliente(0, null, null);
-        int idCliente = 0;
-        boolean condition = false;
 
-        while (!condition) {
-            try {
-                System.out.print("Inserisci l'ID del cliente: ");
-                idCliente = InputHandler.leggiInteroValido();
+        // Effettua il login
+        cliente = eseguiLogin(connectionFactory);
 
-                cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
-
-                if (cliente != null) {
-                    System.out.println("Cliente con ID " + idCliente + " trovato nel database.");
-                    System.out.println("Nome cliente: " + cliente.getNome());
-                    break;
-                } else {
-                    System.err.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
-                    condition = false;
-                }
-
-            } catch (Exception e) {
-                System.err.println("Errore durante il recupero del cliente.");
-            }
+        if (cliente == null) {
+            System.err.println("Nessun cliente trovato nel database. Chiusura del programma.");
+            connectionFactory.close();
+            scanner.close();
+            return;
         }
+
+        System.out.println("Cliente con ID " + cliente.getIdCliente() + " trovato nel database.");
+        System.out.println("Nome cliente: " + cliente.getNome());
 
         System.out.println();
 
@@ -58,35 +48,12 @@ public class Home {
         Carrello carrello = new Carrello(mappaProdotti);
 
         while (scelta != 4) {
-            System.out.println("Menu:");
-            System.out.println("1. Visualizza prodotti");
-            System.out.println("2. Inserisci prodotti nel carrello");
-            System.out.println("3. Visualizza carrello");
-            System.out.println("4. Esci");
+            visualizzaMenu(); // Chiamata al nuovo metodo per visualizzare il menu
 
             System.out.print("Scegli un'opzione: ");
             scelta = InputHandler.leggiInteroValido();
 
-            switch (scelta) {
-                case 1:
-                    Prodotto.stampaTuttiIProdotti(connection);
-                    break;
-                case 2:
-                    selezionaProdotti(connection, mappaProdotti, carrello);
-
-                    break;
-                case 3:
-                    System.out.println("Questi sono i prodotti nel carrello : ");
-                    System.out.println("Cliente : " + idCliente + " " + cliente.getNome() + " " + cliente.getCognome());
-                    carrello.stampaCarrello();
-                    break;
-                case 4:
-                    System.out.println("Chiusura del programma.");
-                    break;
-                default:
-                    System.out.println("Scelta non valida. Riprova.");
-                    break;
-            }
+            gestisciScelta(scelta, connection, mappaProdotti, carrello, scelta, cliente);
         }
 
         // Chiudi la connessione quando hai finito
@@ -97,6 +64,60 @@ public class Home {
         }
 
         scanner.close();
+    }
+
+    private static Cliente eseguiLogin(ConnectionFactory connectionFactory) {
+        Cliente cliente = new Cliente(0, null, null);
+        boolean condition = false;
+
+        while (!condition) {
+            try {
+                System.out.print("Inserisci l'ID del cliente: ");
+                int idCliente = InputHandler.leggiInteroValido();
+
+                cliente = Cliente.retrieveCliente(idCliente, connectionFactory);
+
+                if (cliente != null) {
+                    condition = true;
+                } else {
+                    System.err.println("Nessun cliente con ID " + idCliente + " trovato nel database.");
+                }
+
+            } catch (Exception e) {
+                System.err.println("Errore durante il recupero del cliente.");
+            }
+        }
+
+        return cliente;
+    }
+
+    private static void visualizzaMenu() {
+        System.out.println("Menu:");
+        System.out.println("1. Visualizza prodotti");
+        System.out.println("2. Inserisci prodotti nel carrello");
+        System.out.println("3. Visualizza carrello");
+        System.out.println("4. Esci");
+    }
+    private static void gestisciScelta(int scelta, Connection connection, Map<Integer, Prodotto> mappaProdotti, Carrello carrello, int idCliente, Cliente cliente) throws SQLException {
+        switch (scelta) {
+            case 1:
+                Prodotto.stampaTuttiIProdotti(connection);
+                break;
+            case 2:
+                selezionaProdotti(connection, mappaProdotti, carrello);
+                break;
+            case 3:
+                System.out.println("Questi sono i prodotti nel carrello : ");
+                System.out.println("Cliente : " + idCliente + " " + cliente.getNome() + " " + cliente.getCognome());
+                carrello.stampaCarrello();
+                break;
+            case 4:
+                System.out.println("Chiusura del programma.");
+                break;
+            default:
+                System.out.println("Scelta non valida. Riprova.");
+                break;
+        }
     }
 
     private static void selezionaProdotti(Connection connection, Map<Integer, Prodotto> mappaProdotti, Carrello carrello) {
