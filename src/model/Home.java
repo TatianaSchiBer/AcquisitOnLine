@@ -107,7 +107,7 @@ public class Home {
     public class InputHandler {
         private static Scanner scanner = new Scanner(System.in);
 
-        // Legge un intero valido da input
+        // Controlla se l'utente inserisce correttamente un numero intero
         public static int leggiInteroValido() {
             while (true) {
                 try {
